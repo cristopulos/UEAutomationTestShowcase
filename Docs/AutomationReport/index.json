@@ -1,0 +1,263 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "cristopulos-B650-EAGLE",
+			"instance": "B403E7D8A8524E63AF5090208441DDEC",
+			"instanceName": "cristopulos-B650-EAGLE-1087894",
+			"platform": "LinuxEditor",
+			"oSVersion": "Linux Mint 22.3 6.8.0-139-generic",
+			"model": "Default",
+			"gPU": "NVIDIA GeForce RTX 5070 Ti (NVIDIA UNIX Open Kernel Module for x86_64  570.211.01  Release Build  (dvs-builder@U22-I3-AM27-29-5)  Tue Nov 25 16:23:07 UTC 2025)",
+			"cPUModel": "AMD Ryzen 7 7800X3D 8-Core Processor",
+			"rAMInGB": 62,
+			"renderMode": "SM5",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.09.09-09.08.13",
+	"succeeded": 10,
+	"succeededWithWarnings": 0,
+	"failed": 3,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.1527046412229538,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "CanAffordCost",
+			"fullTestPath": "AutomationShowcase.Currency.CanAffordCost",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"B403E7D8A8524E63AF5090208441DDEC"
+			],
+			"duration": 0.0081449896097183228,
+			"dateTime": "2026.09.09-09.08.13",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "CritDoublesDamage",
+			"fullTestPath": "AutomationShowcase.Damage.CritDoublesDamage",
+			"tags": [],
+			"state": "Fail",
+			"deviceInstance": [
+				"B403E7D8A8524E63AF5090208441DDEC"
+			],
+			"duration": 0.0083558466285467148,
+			"dateTime": "2026.09.09-09.08.13",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Critical hit 25 damage vs 100 health should double to 50 health remaining' to be 50.000000, but it was 62.500000 and outside tolerance 0.001000.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "/home/cristopulos/VibeCoding Test/Automation Showcase/Source/AutomationShowcase/Tests/ShowcaseDamageSystemTests.cpp",
+					"lineNumber": 27,
+					"timestamp": "2026.09.09-09.08.13"
+				}
+			],
+			"warnings": 0,
+			"errors": 1,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "HealthNeverNegative",
+			"fullTestPath": "AutomationShowcase.Damage.HealthNeverNegative",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"B403E7D8A8524E63AF5090208441DDEC"
+			],
+			"duration": 0.0082255816087126732,
+			"dateTime": "2026.09.09-09.08.13",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "NonCritReducesHealth",
+			"fullTestPath": "AutomationShowcase.Damage.NonCritReducesHealth",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"B403E7D8A8524E63AF5090208441DDEC"
+			],
+			"duration": 0.0080275889486074448,
+			"dateTime": "2026.09.09-09.08.13",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "ExactTierBoundaries",
+			"fullTestPath": "AutomationShowcase.EdgeCases.ExactTierBoundaries",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"B403E7D8A8524E63AF5090208441DDEC"
+			],
+			"duration": 0.0083419913426041603,
+			"dateTime": "2026.09.09-09.08.13",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "NegativeDamageIsIgnored",
+			"fullTestPath": "AutomationShowcase.EdgeCases.NegativeDamageIsIgnored",
+			"tags": [],
+			"state": "Fail",
+			"deviceInstance": [
+				"B403E7D8A8524E63AF5090208441DDEC"
+			],
+			"duration": 0.0083927260711789131,
+			"dateTime": "2026.09.09-09.08.13",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Negative damage should be ignored, leaving 75 health' to be 75.000000, but it was 100.000000 and outside tolerance 0.001000.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "/home/cristopulos/VibeCoding Test/Automation Showcase/Source/AutomationShowcase/Tests/ShowcaseEdgeCaseTests.cpp",
+					"lineNumber": 56,
+					"timestamp": "2026.09.09-09.08.13"
+				}
+			],
+			"warnings": 0,
+			"errors": 1,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "ZeroDamageKeepsHealth",
+			"fullTestPath": "AutomationShowcase.EdgeCases.ZeroDamageKeepsHealth",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"B403E7D8A8524E63AF5090208441DDEC"
+			],
+			"duration": 0.008372478187084198,
+			"dateTime": "2026.09.09-09.08.13",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "LootBonusScalesWithLevel",
+			"fullTestPath": "AutomationShowcase.Loot.LootBonusScalesWithLevel",
+			"tags": [],
+			"state": "Fail",
+			"deviceInstance": [
+				"B403E7D8A8524E63AF5090208441DDEC"
+			],
+			"duration": 0.0081944633275270462,
+			"dateTime": "2026.09.09-09.08.13",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Level 10 should scale 100 base loot by +50% to 150' to be 150.000000, but it was 104.999992 and outside tolerance 0.001000.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "/home/cristopulos/VibeCoding Test/Automation Showcase/Source/AutomationShowcase/Tests/ShowcaseDamageSystemTests.cpp",
+					"lineNumber": 89,
+					"timestamp": "2026.09.09-09.08.13"
+				}
+			],
+			"warnings": 0,
+			"errors": 1,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "ActorComponentLifecycle",
+			"fullTestPath": "AutomationShowcase.Setup.ActorComponentLifecycle",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"B403E7D8A8524E63AF5090208441DDEC"
+			],
+			"duration": 0.0092230970039963722,
+			"dateTime": "2026.09.09-09.08.13",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "ActorFixtureAppliesDamage",
+			"fullTestPath": "AutomationShowcase.Setup.ActorFixtureAppliesDamage",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"B403E7D8A8524E63AF5090208441DDEC"
+			],
+			"duration": 0.0089888665825128555,
+			"dateTime": "2026.09.09-09.08.13",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "ActorFixtureCleanupVerifiesDestroy",
+			"fullTestPath": "AutomationShowcase.Setup.ActorFixtureCleanupVerifiesDestroy",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"B403E7D8A8524E63AF5090208441DDEC"
+			],
+			"duration": 0.0093134557828307152,
+			"dateTime": "2026.09.09-09.08.13",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "LatentTickSequence",
+			"fullTestPath": "AutomationShowcase.Setup.LatentTickSequence",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"B403E7D8A8524E63AF5090208441DDEC"
+			],
+			"duration": 0.050105713307857513,
+			"dateTime": "2026.09.09-09.08.13",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "WorldAndActorSpawn",
+			"fullTestPath": "AutomationShowcase.Setup.WorldAndActorSpawn",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"B403E7D8A8524E63AF5090208441DDEC"
+			],
+			"duration": 0.0090178409591317177,
+			"dateTime": "2026.09.09-09.08.13",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

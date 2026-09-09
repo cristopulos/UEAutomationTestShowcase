@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Automation Showcase &mdash; UE 5.7.4 Automation Tests</title>
+<style>
+  /* ---------- Design tokens ---------- */
+  :root {
+    --bg:           #fbfaf7;
+    --surface:      #ffffff;
+    --surface-2:    #f3f1ec;
+    --border:       #e3dfd6;
+    --border-strong:#c9c3b5;
+    --ink:          #1d1b16;
+    --ink-muted:    #5d5a52;
+    --ink-soft:     #807c72;
+    --accent:       #8a5a1f;   /* warm sienna */
+    --accent-soft:  #f4ead8;
+    --pass:         #1f6b3a;
+    --pass-soft:    #e2f0e6;
+    --pass-edge:    #b5d6be;
+    --fail:         #9b2226;
+    --fail-soft:    #f6e2e3;
+    --fail-edge:    #e0b3b6;
+    --warn:         #8a5a1f;
+    --neutral:      #5d5a52;
+    --neutral-soft: #ece9e0;
+    --code-bg:      #f3f1ec;
+    --code-ink:     #2a2620;
+    --link:         #6f4717;
+    --shadow:        0 1px 0 rgba(0,0,0,0.03), 0 8px 24px -16px rgba(40,30,10,0.18);
+    --mono: ui-monospace, "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: "Charter", "Iowan Old Style", "Source Serif Pro", Georgia, "Times New Roman", serif;
+    --display: "Iowan Old Style", "Charter", Georgia, "Times New Roman", serif;
+  }
+
+  /* ---------- Base ---------- */
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--link); text-decoration: none; border-bottom: 1px solid var(--accent-soft); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  code, pre, kbd, samp { font-family: var(--mono); }
+  code {
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 0.12em 0.38em;
+    border-radius: 4px;
+    font-size: 0.88em;
+    border: 1px solid var(--border);
+  }
+  pre {
+    background: var(--code-bg);
+    color: var(--code-ink);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.55;
+    margin: 14px 0 22px;
+  }
+  pre code {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    font-size: inherit;
+  }
+  .cmd {
+    background: #1d1b16;
+    color: #ece6d7;
+    border: 1px solid #2a2620;
+  }
+  .cmd code { background: transparent; border: 0; color: inherit; }
+
+  /* ---------- Top nav ---------- */
+  .topnav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(251,250,247,0.92);
+    backdrop-filter: saturate(140%) blur(8px);
+    -webkit-backdrop-filter: saturate(140%) blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .topnav-inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--display);
+    font-weight: 600;
+    color: var(--ink);
+    border: 0;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+  }
+  .brand-mark {
+    width: 22px; height: 22px;
+    border: 1.5px solid var(--accent);
+    border-radius: 4px;
+    display: inline-block;
+    position: relative;
+  }
+  .brand-mark::after {
+    content: "";
+    position: absolute; inset: 4px;
+    border-left: 1.5px solid var(--accent);
+    border-bottom: 1.5px solid var(--accent);
+  }
+  .navlinks {
+    display: flex; gap: 4px; align-items: center; margin-left: auto;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  .navlinks a {
+    border: 0;
+    color: var(--ink-muted);
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .navlinks a:hover { background: var(--surface-2); color: var(--ink); }
+
+  /* ---------- Page shell ---------- */
+  .page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 56px 24px 96px;
+  }
+
+  /* ---------- Header ---------- */
+  header.hero {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 36px;
+    margin-bottom: 40px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 44px;
+    line-height: 1.1;
+    margin: 0 0 16px;
+    letter-spacing: -0.01em;
+  }
+  .lede {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+    max-width: 72ch;
+    margin: 0;
+  }
+  .meta-row {
+    margin-top: 26px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .meta-row span { display: inline-flex; align-items: center; gap: 6px; }
+  .meta-row .dot { width: 4px; height: 4px; background: var(--border-strong); border-radius: 50%; }
+
+  /* ---------- Section scaffolding ---------- */
+  section { margin: 56px 0; }
+  section:first-of-type { margin-top: 0; }
+  h2 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 28px;
+    letter-spacing: -0.005em;
+    margin: 0 0 6px;
+    padding-top: 12px;
+  }
+  h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 19px;
+    margin: 26px 0 10px;
+  }
+  .section-sub {
+    color: var(--ink-muted);
+    font-size: 15px;
+    margin: 0 0 22px;
+    max-width: 70ch;
+  }
+  .anchor-id { scroll-margin-top: 70px; }
+
+  /* ---------- Lists ---------- */
+  ul, ol { padding-left: 22px; margin: 14px 0; }
+  li { margin: 6px 0; }
+  li::marker { color: var(--accent); }
+
+  /* ---------- File mapping cards ---------- */
+  .filemap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 18px;
+  }
+  .fmap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    box-shadow: var(--shadow);
+  }
+  .fmap .fname {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--accent);
+    margin-bottom: 8px;
+    word-break: break-all;
+  }
+  .fmap ul {
+    margin: 6px 0 0;
+    padding-left: 18px;
+  }
+  .fmap li {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink);
+  }
+
+  /* ---------- Resource cards ---------- */
+  .resource-card {
+    display: block;
+    color: var(--ink);
+    border-bottom: 0;
+    transition: border-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+  }
+  .resource-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 10px 28px -18px rgba(138,90,31,0.32);
+  }
+  .resource-card .rtitle {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .resource-card .rtitle::after {
+    content: "\2197";
+    color: var(--ink-soft);
+    font-weight: 400;
+    font-size: 11px;
+    transition: color 120ms ease;
+  }
+  .resource-card:hover .rtitle::after { color: var(--accent); }
+  .resource-card .rtopic {
+    font-family: var(--sans);
+    font-size: 13.5px;
+    color: var(--ink-muted);
+    line-height: 1.5;
+  }
+
+  /* ---------- Note box ---------- */
+  .note {
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin: 18px 0;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .note strong { color: var(--accent); }
+  .note code { background: rgba(255,255,255,0.6); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    border-top: 1px solid var(--border);
+    margin-top: 64px;
+    padding-top: 22px;
+    color: var(--ink-soft);
+    font-size: 13px;
+    font-family: var(--mono);
+    line-height: 1.7;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 760px) {
+    h1 { font-size: 34px; }
+    .page { padding: 32px 18px 64px; }
+    .filemap { grid-template-columns: 1fr; }
+    .navlinks { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark"></span>
+      Automation&nbsp;Showcase
+    </a>
+    <div class="navlinks">
+      <a href="#why">Why</a>
+      <a href="#stub">Gameplay stub</a>
+      <a href="#tests">Test files</a>
+      <a href="#setup">Setup patterns</a>
+      <a href="#run">How to run</a>
+      <a href="#resources">Resources</a>
+    </div>
+  </div>
+</nav>
+
+<main class="page">
+
+  <header class="hero" id="top">
+    <div class="eyebrow">Unreal Engine 5.7.4 &middot; Automation Testing</div>
+    <h1>Automation Showcase</h1>
+    <p class="lede">
+      This project demonstrates Unreal Engine's built-in Automation Test system end-to-end
+      with a small stub gameplay &ldquo;damage system&rdquo;
+      (<code>UShowcaseDamageSystem</code>) and <strong>13 C++ automation tests</strong> &mdash;
+      10 verify correct behavior (including 5 that exercise initial-setup patterns such as
+      transient worlds, latent commands, and shared actor fixtures), and 3 intentionally fail
+      because the gameplay code and one test contain deliberately seeded bugs. The purpose
+      is to show what automation tests are for (catching logic regressions early,
+      documenting intent, enabling CI), how they are written, registered, and run.
+    </p>
+    <div class="meta-row">
+      <span>Engine: UE 5.7.4</span>
+      <span class="dot"></span>
+      <span>Module: AutomationShowcase</span>
+      <span class="dot"></span>
+      <span>Tests: 13 (10 pass / 3 fail)</span>
+      <span class="dot"></span>
+      <span>Generated 2026-09-09</span>
+    </div>
+  </header>
+
+  <section id="why" class="anchor-id">
+    <h2>Why automation tests</h2>
+    <p class="section-sub">
+      Automation tests are the cheapest, fastest way to keep gameplay math honest as a
+      codebase grows. They run without a human, without rendering, and without a level.
+    </p>
+    <ul>
+      <li><strong>Regression protection.</strong> A test that passes today locks today's
+        behavior in. When a refactor silently changes a constant or a clamp, the next run
+        turns red and points to the diff.</li>
+      <li><strong>Runnable headless in CI.</strong> The same <code>RunTest</code> body that
+        the editor GUI executes can be invoked from a shell with <code>-unattended</code>,
+        <code>-nullrhi</code>, and no windowing system &mdash; exactly what a build bot needs.</li>
+      <li><strong>Readable failure messages.</strong> <code>TestEqual</code> /
+        <code>TestTrue</code> take a descriptive <em>What</em> string that becomes the
+        human-readable &ldquo;expected vs actual&rdquo; line in the report.</li>
+      <li><strong>Executable spec.</strong> A passing test suite documents intended behavior
+        in a form that cannot drift out of date, because it is the code.</li>
+    </ul>
+  </section>
+
+  <section id="stub" class="anchor-id">
+    <h2>The gameplay stub</h2>
+    <p class="section-sub">
+      <code>UShowcaseDamageSystem</code> is a <code>UCLASS</code> of pure static
+      <code>UFUNCTION</code> helpers. No actor, no tick, no world needed &mdash; which is
+      exactly what makes it ideal for fast, deterministic unit tests.
+    </p>
+
+    <h3>Spec</h3>
+    <ul>
+      <li><code>ApplyDamage(CurrentHealth, IncomingDamage, bIsCriticalHit)</code> &mdash;
+        crit doubles damage; result is clamped to <code>[0, CurrentHealth]</code>.</li>
+      <li><code>CanAffordCost(CurrentCurrency, Cost)</code> &mdash; true when
+        <code>CurrentCurrency &gt;= Cost</code>.</li>
+      <li><code>GetDamageTier(Damage)</code> &mdash; <code>Low &lt; 25</code>,
+        <code>Medium &ge; 25 &lt; 75</code>, <code>High &ge; 75</code>.</li>
+      <li><code>CalculateLootBonus(PlayerLevel, BaseLoot)</code> &mdash;
+        <code>BaseLoot * (1 + 0.05 * Level)</code>.</li>
+    </ul>
+
+    <h3>Header <span style="font-family: var(--mono); font-size: 13px; color: var(--ink-soft); font-weight: 400;">Source/AutomationShowcase/ShowcaseDamageSystem.h</span></h3>
+<pre><code><span style="color:#7a7466;">// Copyright Epic Games, Inc. All Rights Reserved.</span>
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "UObject/Object.h"
+#include "ShowcaseDamageSystem.generated.h"
+
+/**
+ * Self-contained showcase damage system.
+ * Pure calculation helpers - no Tick, no components, no actor required.
+ *
+ * NOTE (showcase): This class intentionally contains two seeded bugs
+ * (ApplyDamage crit multiplier and CalculateLootBonus scaling) so that
+ * automation tests can be demonstrated failing. See INTENTIONAL-BUG
+ * comments in ShowcaseDamageSystem.cpp.
+ */
+UCLASS()
+class AUTOMATIONSHOWCASE_API UShowcaseDamageSystem : public UObject
+{
+    GENERATED_BODY()
+
+public:
+    /** Applies IncomingDamage to CurrentHealth and returns the new health.
+     *  Critical hits double the incoming damage (x2.0). Result is clamped to
+     *  [0, CurrentHealth] (overkill protection only; negative damage is NOT
+     *  guarded - see EdgeCase test). */
+    UFUNCTION(BlueprintCallable, Category = "Showcase|Damage")
+    static float ApplyDamage(float CurrentHealth, float IncomingDamage, bool bIsCriticalHit);
+
+    /** Returns true when CurrentCurrency &gt;= Cost. */
+    UFUNCTION(BlueprintCallable, Category = "Showcase|Damage")
+    static bool CanAffordCost(int32 CurrentCurrency, int32 Cost);
+
+    /** Maps a damage amount to a tier label:
+     *    "Low"    : Damage &lt; 25.0
+     *    "Medium" : 25.0 &lt;= Damage &lt; 75.0
+     *    "High"   : Damage &gt;= 75.0 */
+    UFUNCTION(BlueprintCallable, Category = "Showcase|Damage")
+    static FString GetDamageTier(float Damage);
+
+    /** Returns BaseLoot scaled by player level: BaseLoot * (1.0 + 0.05 * PlayerLevel). */
+    UFUNCTION(BlueprintCallable, Category = "Showcase|Damage")
+    static float CalculateLootBonus(int32 PlayerLevel, float BaseLoot);
+};</code></pre>
+  </section>
+
+  <section id="tests" class="anchor-id">
+    <h2>The test files</h2>
+    <p class="section-sub">
+      Tests live under <code>Source/AutomationShowcase/Tests/</code> and follow the
+      standard UE pattern: one <code>IMPLEMENT_SIMPLE_AUTOMATION_TEST</code> macro per
+      test, each implementing <code>RunTest</code>.
+    </p>
+
+    <div class="filemap">
+      <div class="fmap">
+        <div class="fname">Source/AutomationShowcase/Tests/<br/>ShowcaseDamageSystemTests.cpp</div>
+        <ul>
+          <li>AutomationShowcase.Damage.CritDoublesDamage</li>
+          <li>AutomationShowcase.Damage.NonCritReducesHealth</li>
+          <li>AutomationShowcase.Damage.HealthNeverNegative</li>
+          <li>AutomationShowcase.Currency.CanAffordCost</li>
+          <li>AutomationShowcase.Loot.LootBonusScalesWithLevel</li>
+        </ul>
+      </div>
+      <div class="fmap">
+        <div class="fname">Source/AutomationShowcase/Tests/<br/>ShowcaseEdgeCaseTests.cpp</div>
+        <ul>
+          <li>AutomationShowcase.EdgeCases.ExactTierBoundaries</li>
+          <li>AutomationShowcase.EdgeCases.NegativeDamageIsIgnored</li>
+          <li>AutomationShowcase.EdgeCases.ZeroDamageKeepsHealth</li>
+        </ul>
+      </div>
+      <div class="fmap">
+        <div class="fname">Source/AutomationShowcase/Tests/<br/>ShowcaseSetupWorldTests.cpp</div>
+        <ul>
+          <li>AutomationShowcase.Setup.WorldAndActorSpawn</li>
+          <li>AutomationShowcase.Setup.ActorComponentLifecycle</li>
+          <li>AutomationShowcase.Setup.LatentTickSequence</li>
+        </ul>
+      </div>
+      <div class="fmap">
+        <div class="fname">Source/AutomationShowcase/Tests/<br/>ShowcaseFixtureTests.cpp<br/><span style="color: var(--ink-soft); font-weight: 400;">(fixture: ShowcaseTargetDummy.h/.cpp)</span></div>
+        <ul>
+          <li>AutomationShowcase.Setup.ActorFixtureAppliesDamage</li>
+          <li>AutomationShowcase.Setup.ActorFixtureCleanupVerifiesDestroy</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Registration pattern</h3>
+    <p>
+      The macro takes the C++ class name, the test's pretty path (used as the filter
+      string when running tests from CLI or GUI), and the test flags.
+    </p>
+<pre><code><span style="color:#7a7466;">// Source/AutomationShowcase/Tests/ShowcaseEdgeCaseTests.cpp (lines 13&ndash;17)</span>
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FShowcaseEdgeCasesExactTierBoundariesTest,
+    <span style="color:#1f6b3a;">"AutomationShowcase.EdgeCases.ExactTierBoundaries"</span>,
+    <span style="color:#9b2226;">EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter</span>)
+
+bool FShowcaseEdgeCasesExactTierBoundariesTest::RunTest(const FString&amp; Parameters)
+{
+    UShowcaseDamageSystem* DamageSystem = NewObject&lt;UShowcaseDamageSystem&gt;();
+    TestEqual(TEXT("Zero damage is tier Low"), DamageSystem-&gt;GetDamageTier(0.0f), FString(TEXT("Low")));
+    <span style="color:#7a7466;">// ...</span>
+    return true;
+}</code></pre>
+
+    <ul>
+      <li><strong>PrettyName</strong> &mdash; the second macro argument becomes the test's
+        path. CLI filters and GUI search boxes match against this string.</li>
+      <li><strong><code>EditorContext</code></strong> &mdash; the test runs in the editor
+        (and in <code>UnrealEditor-Cmd</code> headless mode), which is what we want for
+        unit-style tests of editor-time gameplay math.</li>
+      <li><strong><code>EngineFilter</code></strong> &mdash; membership in the <em>Engine</em>
+        smoke-filter group; this is what keeps project tests out of unrelated engine
+        smoke-test sweeps.</li>
+      <li><strong><code>RunTest</code></strong> &mdash; the body. Call <code>TestEqual</code>,
+        <code>TestTrue</code>, <code>TestFalse</code> with descriptive <em>What</em> strings;
+        those strings are what shows up in the failure report.</li>
+    </ul>
+  </section>
+
+  <section id="setup" class="anchor-id">
+    <h2>Tests requiring initial setup</h2>
+    <p class="section-sub">
+      The five tests below all pass and they exist to show the <em>initial-setup
+      patterns</em> that real gameplay tests need before any assertion can run: a
+      transient world with its own world context, latent asynchronous commands, and a
+      shared actor fixture that delegates to <code>UShowcaseDamageSystem</code>.
+    </p>
+
+    <h3>Pattern A &mdash; per-test world setup / teardown</h3>
+    <p>
+      <code>Source/AutomationShowcase/Tests/ShowcaseSetupWorldTests.cpp</code> &mdash;
+      each test creates its own transient <code>UWorld</code> via
+      <code>UWorld::CreateWorld(EWorldType::Game, false)</code> plus a dedicated
+      <code>FWorldContext</code> through <code>GEngine-&gt;CreateNewWorldContext</code>
+      (mirroring Epic's own <code>FTestWorldWrapper</code> lifecycle), spawns actors or
+      components, asserts, and then explicitly tears everything down with
+      <code>UWorld::DestroyWorld(false)</code> and
+      <code>GEngine-&gt;DestroyWorldContext</code> so tests never leak state.
+    </p>
+<pre><code><span style="color:#7a7466;">// Source/AutomationShowcase/Tests/ShowcaseSetupWorldTests.cpp (lines 34&ndash;55)</span>
+static UWorld* CreateShowcasePatternAWorld()
+{
+    UWorld* TestWorld = UWorld::CreateWorld(EWorldType::Game, false);
+    if (IsValid(TestWorld) &amp;&amp; GEngine)
+    {
+        FWorldContext&amp; WorldContext = GEngine-&gt;CreateNewWorldContext(EWorldType::Game);
+        WorldContext.SetCurrentWorld(TestWorld);
+    }
+    return TestWorld;
+}
+
+static void DestroyShowcasePatternAWorld(UWorld* TestWorld)
+{
+    if (IsValid(TestWorld))
+    {
+        if (GEngine) { GEngine-&gt;DestroyWorldContext(TestWorld); }
+        TestWorld-&gt;DestroyWorld(false);
+    }
+}</code></pre>
+
+    <ul>
+      <li><strong>AutomationShowcase.Setup.WorldAndActorSpawn</strong> &mdash;
+        spawns a plain actor, asserts it lives in <em>this</em> world
+        (<code>SpawnedActor-&gt;GetWorld() == TestWorld</code>), calls
+        <code>Destroy()</code>, asserts it's no longer valid, then tears down the world.</li>
+      <li><strong>AutomationShowcase.Setup.ActorComponentLifecycle</strong> &mdash;
+        <code>NewObject&lt;UPointLightComponent&gt;(OwnerActor)</code> &rarr;
+        <code>OwnerActor-&gt;AddInstanceComponent</code> &rarr;
+        <code>RegisterComponent</code> (assert <code>IsRegistered()</code>) &rarr;
+        <code>DestroyComponent</code> (assert <em>not</em> registered), then
+        <code>OwnerActor-&gt;Destroy()</code> + world teardown.</li>
+    </ul>
+
+    <h3>Pattern B &mdash; latent asynchronous setup</h3>
+    <p>
+      <code>AutomationShowcase.Setup.LatentTickSequence</code> uses
+      <code>ADD_LATENT_AUTOMATION_COMMAND</code> to enqueue commands that run
+      <em>after</em> <code>RunTest</code> returns. The first command is a pump that
+      increments a shared counter each time its <code>Update()</code> is called (over N
+      frames). The second command is enqueued <em>after</em> it, so the framework's
+      FIFO latent queue guarantees the assertion command runs only after setup
+      completed. The assertion routes through
+      <code>FAutomationTestFramework::Get().GetCurrentTest()</code> so failures still
+      land in the test report.
+    </p>
+<pre><code><span style="color:#7a7466;">// Source/AutomationShowcase/Tests/ShowcaseSetupWorldTests.cpp</span>
+<span style="color:#7a7466;">// Pump command: completes after N Update() calls.</span>
+DEFINE_LATENT_AUTOMATION_COMMAND_ONE_PARAMETER(FShowcasePumpTicksCommand, int32, TicksToPump);
+
+bool FShowcasePumpTicksCommand::Update()
+{
+    ++FShowcasePumpCounterValue;
+    return FShowcasePumpCounterValue &gt;= TicksToPump;
+}
+
+<span style="color:#7a7466;">// Verify command: reports through the currently-executing test.</span>
+DEFINE_LATENT_AUTOMATION_COMMAND_ONE_PARAMETER(FShowcaseVerifyTicksCommand, int32, ExpectedTicks);
+
+bool FShowcaseVerifyTicksCommand::Update()
+{
+    if (FAutomationTestBase* CurrentTest = FAutomationTestFramework::Get().GetCurrentTest())
+    {
+        CurrentTest-&gt;TestEqual(TEXT("Latent setup ran the pump command once per frame for the expected number of updates"),
+            static_cast&lt;float&gt;(FShowcasePumpCounterValue), static_cast&lt;float&gt;(ExpectedTicks), 0.001f);
+    }
+    return true;
+}
+
+bool FShowcaseSetupLatentTickSequenceTest::RunTest(const FString&amp; Parameters)
+{
+    FShowcasePumpCounterValue = 0;
+    const int32 TicksToPump = 5;
+    ADD_LATENT_AUTOMATION_COMMAND(FShowcasePumpTicksCommand(TicksToPump));
+    ADD_LATENT_AUTOMATION_COMMAND(FShowcaseVerifyTicksCommand(TicksToPump));
+    return true;
+}</code></pre>
+    <p>
+      <strong>Key point:</strong> assertions on async or deferred setup must themselves
+      be latent commands, because the latent queue drains <em>after</em>
+      <code>RunTest</code> returns. Calling <code>TestEqual</code> synchronously inside
+      <code>RunTest</code> would run before any pumping has happened.
+    </p>
+
+    <h3>Pattern C &mdash; shared actor fixture</h3>
+    <p>
+      <code>Source/AutomationShowcase/ShowcaseTargetDummy.{h,cpp}</code> defines a
+      minimal <code>AActor</code> whose <code>ApplyDamageToTarget</code> delegates to
+      <code>UShowcaseDamageSystem::ApplyDamage</code>, so fixture tests can drive the
+      whole chain (world &rarr; actor &rarr; system) end-to-end.
+    </p>
+<pre><code><span style="color:#7a7466;">// Source/AutomationShowcase/ShowcaseTargetDummy.h (key declarations)</span>
+UCLASS()
+class AUTOMATIONSHOWCASE_API AShowcaseTargetDummy : public AActor
+{
+    GENERATED_BODY()
+public:
+    AShowcaseTargetDummy();
+    UPROPERTY(BlueprintReadOnly, Category = "Showcase|Damage")
+    float Health = 100.0f;
+    UFUNCTION(BlueprintCallable, Category = "Showcase|Damage")
+    float ApplyDamageToTarget(float Damage, bool bIsCritical);
+};
+
+<span style="color:#7a7466;">// Source/AutomationShowcase/ShowcaseTargetDummy.cpp</span>
+float AShowcaseTargetDummy::ApplyDamageToTarget(float Damage, bool bIsCritical)
+{
+    Health = UShowcaseDamageSystem::ApplyDamage(Health, Damage, bIsCritical);
+    return Health;
+}</code></pre>
+
+    <ul>
+      <li><strong>AutomationShowcase.Setup.ActorFixtureAppliesDamage</strong> &mdash;
+        builds a transient world + spawns the dummy + a shared
+        <code>UShowcaseDamageSystem</code>, then calls
+        <code>TargetDummy-&gt;ApplyDamageToTarget(30.0f, false)</code> on 100 HP and
+        asserts the dummy lands at 70 (the non-crit path).</li>
+      <li><strong>AutomationShowcase.Setup.ActorFixtureCleanupVerifiesDestroy</strong>
+        &mdash; builds the same fixture, applies one tick of damage, then
+        <code>TargetDummy-&gt;Destroy()</code> and asserts <code>!IsValid(TargetDummy)</code>.</li>
+    </ul>
+
+    <div class="note">
+      <strong>Why the cleanup test asserts a <em>delta</em>, not an absolute zero.</strong>
+      A fresh <code>UWorld</code> from <code>CreateWorld(EWorldType::Game, false)</code>
+      comes with its level pre-populated with a few default actors (notably
+      <code>WorldSettings</code>), and <code>RemoveActor</code> nulls the actor's slot
+      in the level's array rather than shrinking the array. So the test captures a
+      <em>baseline</em> non-null actor count before the spawn and asserts that the
+      count returns to that baseline after <code>Destroy()</code> &mdash; the
+      idiomatic way to verify cleanup of a spawned actor in a freshly-created world.
+    </div>
+
+    <div class="note">
+      <strong>Note on the seeded crit bug:</strong> because
+      <code>AShowcaseTargetDummy::ApplyDamageToTarget</code> delegates to
+      <code>UShowcaseDamageSystem::ApplyDamage</code>, the seeded 1.5&times; crit bug
+      also affects the actor. The fixture tests assert <em>current</em> behavior (and
+      stay non-crit), so they pass &mdash; bug-catching is the job of the three
+      intentionally-failing tests in the suite.
+    </div>
+  </section>
+
+  <section id="run" class="anchor-id">
+    <h2>How to trigger the tests</h2>
+    <p class="section-sub">
+      Three ways: the in-editor GUI, a headless command line for CI, and a listing-only command.
+    </p>
+
+    <h3>a. In-editor GUI</h3>
+    <ul>
+      <li><strong>Window &rarr; Test Automation</strong> (or
+        <strong>Tools &rarr; Session Frontend &rarr; Automation</strong> tab).</li>
+      <li>Type <code>AutomationShowcase</code> into the filter.</li>
+      <li>Tick the individual tests, or tick the top-level <em>AutomationShowcase</em>
+        node to select everything.</li>
+      <li>Press <strong>Start Tests</strong>. Results appear in the same window;
+        failures turn red with the verbatim error messages.</li>
+    </ul>
+
+    <h3>b. Command line (headless)</h3>
+    <p>
+      <code>-nullrhi</code> skips rendering entirely, <code>-unattended</code> skips any
+      modal prompts, and <code>-ReportOutputPath</code> / <code>-ReportType=HTML</code>
+      produce an <code>index.html</code> + <code>index.json</code> report alongside the
+      log. The exit code is non-zero when tests fail, which is what makes it usable as
+      a CI gate.
+    </p>
+<pre class="cmd"><code>"/mnt/data/UE 5.7.4/Engine/Binaries/Linux/UnrealEditor-Cmd" \
+  "/home/cristopulos/VibeCoding Test/Automation Showcase/AutomationShowcase.uproject" \
+  -ExecCmds="Automation RunTests AutomationShowcase; quit" \
+  -unattended -nopause -nosplash -nullrhi -log \
+  -ReportOutputPath=/tmp/autoshowcase-report -ReportType=HTML</code></pre>
+
+    <div class="note">
+      The filter string <code>AutomationRunTests AutomationShowcase</code> matches every
+      test whose pretty-name starts with <code>AutomationShowcase.</code> &mdash; exactly
+      the 13 tests in this suite.
+    </div>
+
+    <h3>c. List tests without running them</h3>
+<pre class="cmd"><code>"/mnt/data/UE 5.7.4/Engine/Binaries/Linux/UnrealEditor-Cmd" \
+  "/home/cristopulos/VibeCoding Test/Automation Showcase/AutomationShowcase.uproject" \
+  -ExecCmds="Automation List; quit" \
+  -unattended -nopause -nosplash -nullrhi -log</code></pre>
+
+    <h3>d. Building the code first</h3>
+    <p>
+      If the editor target isn't already compiled, run UnrealBuildTool before invoking
+      the test command above.
+    </p>
+<pre class="cmd"><code>"/mnt/data/UE 5.7.4/Engine/Binaries/ThirdParty/DotNet/8.0.412/linux-x64/dotnet" \
+  "/mnt/data/UE 5.7.4/Engine/Binaries/DotNET/UnrealBuildTool/UnrealBuildTool.dll" \
+  AutomationShowcaseEditor Linux Development \
+  -project="/home/cristopulos/VibeCoding Test/Automation Showcase/AutomationShowcase.uproject" \
+   -WaitMutex</code></pre>
+  </section>
+
+  <section id="resources" class="anchor-id">
+    <h2>Further resources</h2>
+    <p class="section-sub">
+      Official Epic Games documentation on the automation test framework.
+    </p>
+
+    <div class="filemap">
+      <a class="fmap resource-card" target="_blank" rel="noopener" href="https://dev.epicgames.com/documentation/unreal-engine/write-cplusplus-tests-in-unreal-engine">
+        <div class="rtitle">Write C++ Tests</div>
+        <div class="rtopic">How to write C++ automation tests like the ones in this project (<code>IMPLEMENT_SIMPLE_AUTOMATION_TEST</code> and friends).</div>
+      </a>
+      <a class="fmap resource-card" target="_blank" rel="noopener" href="https://dev.epicgames.com/documentation/en-us/unreal-engine/automation-test-framework-in-unreal-engine">
+        <div class="rtitle">Automation Test Framework</div>
+        <div class="rtopic">Framework overview: unit, feature, and stress testing, plus test design guidelines.</div>
+      </a>
+      <a class="fmap resource-card" target="_blank" rel="noopener" href="https://dev.epicgames.com/documentation/en-us/unreal-engine/automation-system-user-guide-in-unreal-engine">
+        <div class="rtitle">Automation System User Guide</div>
+        <div class="rtopic">Running, filtering, and exporting tests from the editor UI (Session Frontend).</div>
+      </a>
+      <a class="fmap resource-card" target="_blank" rel="noopener" href="https://dev.epicgames.com/documentation/en-us/unreal-engine/run-automation-tests-in-unreal-engine">
+        <div class="rtitle">Run Automation Tests</div>
+        <div class="rtopic">Editor, Unreal Frontend, and command-line execution with report output.</div>
+      </a>
+      <a class="fmap resource-card" target="_blank" rel="noopener" href="https://dev.epicgames.com/documentation/en-us/unreal-engine/automation-spec-in-unreal-engine">
+        <div class="rtitle">Automation Spec</div>
+        <div class="rtopic">BDD-style testing (<code>DEFINE_SPEC</code>, <code>Describe</code>/<code>It</code>) as an alternative to the simple-test macros used here.</div>
+      </a>
+      <a class="fmap resource-card" target="_blank" rel="noopener" href="https://dev.epicgames.com/documentation/en-us/unreal-engine/screenshot-comparison-tool-in-unreal-engine">
+        <div class="rtitle">Screenshot Comparison Tool</div>
+        <div class="rtopic">Ground-truth image capture and comparison for visual automation runs.</div>
+      </a>
+      <a class="fmap resource-card" target="_blank" rel="noopener" href="https://dev.epicgames.com/documentation/en-us/unreal-engine/gauntlet-automation-framework-in-unreal-engine">
+        <div class="rtitle">Gauntlet Automation Framework</div>
+        <div class="rtopic">Multi-process session orchestration (e.g. multi-client + server) for larger automated runs.</div>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div>Automation Showcase &middot; Unreal Engine 5.7.4 &middot; module
+      <code>AutomationShowcase</code> &middot; generated 2026-09-09.</div>
+    <div style="margin-top:6px;">
+      Seeded-bug locations: <code>ShowcaseDamageSystem.cpp:11</code>,
+      <code>ShowcaseDamageSystem.cpp:52</code>,
+      <code>ShowcaseEdgeCaseTests.cpp:52</code>.
+    </div>
+  </footer>
+
+</main>
+
+</body>
+</html>
