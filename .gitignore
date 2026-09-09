@@ -17,3 +17,9 @@ Plugins/*/DerivedDataCache/
 # OS junk
 .DS_Store
 Thumbs.db
+# MCP / AI-agent tooling (local only, not part of the showcase)
+Plugins/VibeUE/
+start-vibeue.sh
+opencode.json
+AGENTS.md
+Config/DefaultEditorPerProjectUserSettings.ini
