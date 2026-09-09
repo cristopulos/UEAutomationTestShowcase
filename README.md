@@ -4,7 +4,7 @@ An Unreal Engine **5.7.4** project demonstrating the built-in **Automation Test 
 
 **Purpose:** show what automation tests are for — catching logic regressions early, documenting intent, running headless in CI — how they are written and registered, what failing tests look like, and tests that require initial setup before assertions.
 
-> 📄 **Full documentation (live, rendered):** https://cristopulos.github.io/UEAutomationTestShowcase/AutomationTests.html — purpose, code walkthrough, setup patterns, trigger commands, Epic resources. A captured report of a real run ships in [`Docs/AutomationReport/`](Docs/AutomationReport/index.html) ([view rendered](https://cristopulos.github.io/UEAutomationTestShowcase/AutomationReport/index.html)).
+> 📄 **Full documentation (live, rendered):** https://cristopulos.github.io/UEAutomationTestShowcase/AutomationTests.html — purpose, code walkthrough, setup patterns, trigger commands, Epic resources. A captured report of a real run ships in [`Docs/AutomationReport/`](Docs/AutomationReport/index.json) ([view rendered report](https://cristopulos.github.io/UEAutomationTestShowcase/AutomationReport/report.html); the raw UE-generated `index.html` depends on engine-local assets and renders fully only when opened from the engine install).
 
 ## What's in the suite
 

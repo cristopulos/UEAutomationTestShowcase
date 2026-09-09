@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Automation Test Report &mdash; captured run</title>
+<style>
+  /* ---------- Design tokens (mirrors Docs/AutomationTests.html) ---------- */
+  :root {
+    --bg:           #fbfaf7;
+    --surface:      #ffffff;
+    --surface-2:    #f3f1ec;
+    --border:       #e3dfd6;
+    --border-strong:#c9c3b5;
+    --ink:          #1d1b16;
+    --ink-muted:    #5d5a52;
+    --ink-soft:     #807c72;
+    --accent:       #8a5a1f;   /* warm sienna */
+    --accent-soft:  #f4ead8;
+    --pass:         #1f6b3a;
+    --pass-soft:    #e2f0e6;
+    --pass-edge:    #b5d6be;
+    --fail:         #9b2226;
+    --fail-soft:    #f6e2e3;
+    --fail-edge:    #e0b3b6;
+    --neutral:      #5d5a52;
+    --neutral-soft: #ece9e0;
+    --code-bg:      #f3f1ec;
+    --code-ink:     #2a2620;
+    --link:         #6f4717;
+    --shadow:        0 1px 0 rgba(0,0,0,0.03), 0 8px 24px -16px rgba(40,30,10,0.18);
+    --mono: ui-monospace, "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: "Charter", "Iowan Old Style", "Source Serif Pro", Georgia, "Times New Roman", serif;
+    --display: "Iowan Old Style", "Charter", Georgia, "Times New Roman", serif;
+  }
+
+  /* ---------- Base ---------- */
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--link); text-decoration: none; border-bottom: 1px solid var(--accent-soft); }
+  a:hover { border-bottom-color: var(--accent); }
+
+  code, pre, kbd, samp { font-family: var(--mono); }
+  code {
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 0.12em 0.38em;
+    border-radius: 4px;
+    font-size: 0.88em;
+    border: 1px solid var(--border);
+  }
+
+  /* ---------- Page shell ---------- */
+  .page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 56px 24px 96px;
+  }
+
+  /* ---------- Header ---------- */
+  header.hero {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 28px;
+    margin-bottom: 32px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 1.15;
+    margin: 0 0 8px;
+    letter-spacing: -0.005em;
+  }
+  .meta-line {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+  }
+  .meta-line .dot { width: 4px; height: 4px; background: var(--border-strong); border-radius: 50%; align-self: center; }
+  .meta-line a { border-bottom-color: var(--border); }
+
+  /* ---------- Summary chips ---------- */
+  .summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 22px 0 8px;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--ink);
+  }
+  .chip strong {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .chip.pass strong { color: var(--pass); }
+  .chip.fail strong { color: var(--fail); }
+  .chip .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--border-strong);
+  }
+  .chip.pass .dot { background: var(--pass); }
+  .chip.fail .dot { background: var(--fail); }
+
+  /* ---------- Section scaffolding ---------- */
+  section { margin: 44px 0; }
+  section:first-of-type { margin-top: 0; }
+  h2 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 22px;
+    margin: 0 0 14px;
+    letter-spacing: -0.005em;
+  }
+  .section-sub {
+    color: var(--ink-muted);
+    font-size: 14.5px;
+    margin: 0 0 18px;
+    max-width: 70ch;
+  }
+
+  /* ---------- Pill / badges ---------- */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+  .pill::before {
+    content: "";
+    width: 6px; height: 6px; border-radius: 50%;
+    background: currentColor;
+  }
+  .pill.pass { color: var(--pass); background: var(--pass-soft); border-color: var(--pass-edge); }
+  .pill.fail { color: var(--fail); background: var(--fail-soft); border-color: var(--fail-edge); }
+
+  /* ---------- Results table ---------- */
+  table.results {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  table.results thead th {
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: var(--surface-2);
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  table.results tbody td {
+    padding: 13px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-size: 14px;
+  }
+  table.results tbody tr:last-child td { border-bottom: 0; }
+  table.results tbody tr:hover td { background: #fafaf6; }
+  table.results td.path {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink);
+    word-break: break-all;
+  }
+  table.results td.dur {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    white-space: nowrap;
+  }
+  table.results tr.row-fail td.path { color: var(--fail); font-weight: 600; }
+
+  /* ---------- Failure details (native <details>) ---------- */
+  tr.row-fail-details td {
+    background: #faf6f5;
+    border-top: 0;
+    padding: 0 14px 14px;
+  }
+  details.fail {
+    border: 1px solid var(--fail-edge);
+    border-left: 3px solid var(--fail);
+    border-radius: 6px;
+    background: var(--surface);
+    margin-top: 4px;
+    overflow: hidden;
+  }
+  details.fail > summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--fail);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    user-select: none;
+  }
+  details.fail > summary::-webkit-details-marker { display: none; }
+  details.fail > summary::before {
+    content: "\25B8";
+    color: var(--fail);
+    font-size: 10px;
+    width: 10px;
+    display: inline-block;
+    transition: transform 120ms ease;
+  }
+  details.fail[open] > summary::before {
+    transform: rotate(90deg);
+  }
+  details.fail > summary .hint {
+    color: var(--ink-soft);
+    font-family: var(--sans);
+    font-size: 12.5px;
+    font-weight: 400;
+  }
+  .fail-body {
+    padding: 4px 14px 12px;
+    border-top: 1px solid var(--fail-edge);
+    background: var(--fail-soft);
+  }
+  .fail-body .fmsg {
+    background: var(--surface);
+    border: 1px solid var(--fail-edge);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: #5a1216;
+    line-height: 1.55;
+    margin: 10px 0 8px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .fail-body .fcause {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-muted);
+    line-height: 1.55;
+  }
+  .fail-body .fcause strong {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .fail-body .fcause code {
+    background: rgba(255,255,255,0.65);
+  }
+
+  /* ---------- Note box ---------- */
+  .note {
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin: 22px 0;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .note strong { color: var(--accent); }
+  .note code { background: rgba(255,255,255,0.6); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    border-top: 1px solid var(--border);
+    margin-top: 56px;
+    padding-top: 20px;
+    color: var(--ink-soft);
+    font-size: 12.5px;
+    font-family: var(--mono);
+    line-height: 1.7;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 760px) {
+    h1 { font-size: 28px; }
+    .page { padding: 32px 18px 64px; }
+    .summary { gap: 6px; }
+    .chip { font-size: 11.5px; padding: 6px 10px; }
+    table.results td.path { word-break: break-all; }
+  }
+</style>
+</head>
+<body>
+
+<main class="page">
+
+  <header class="hero">
+    <div class="eyebrow">Unreal Engine 5.7.4 &middot; Automation Test Report</div>
+    <h1>Automation Test Report &mdash; captured run</h1>
+    <p class="section-sub" style="margin-bottom: 0;">
+      Static rendering of <code>Docs/AutomationReport/index.json</code> from a real headless
+      <code>UnrealEditor-Cmd</code> run on this machine. The original UE-generated
+      <code>index.html</code> depends on absolute engine paths and renders blank on
+      GitHub Pages; this view is dependency-free so it can be linked from the live site.
+    </p>
+    <div class="meta-line">
+      <span>reportCreatedOn: <strong style="color: var(--ink);">2026.09.09-11.22.17</strong></span>
+      <span class="dot"></span>
+      <span>platform: <strong style="color: var(--ink);">LinuxEditor</strong></span>
+      <span class="dot"></span>
+      <span>device: <strong style="color: var(--ink);">cristopulos-B650-EAGLE</strong></span>
+      <span class="dot"></span>
+      <span>generated 2026-09-09</span>
+    </div>
+  </header>
+
+  <div class="summary" role="group" aria-label="Test totals">
+    <span class="chip"><strong>13</strong> tests</span>
+    <span class="chip pass"><span class="dot"></span><strong>10</strong> passed</span>
+    <span class="chip fail"><span class="dot"></span><strong>3</strong> failed</span>
+    <span class="chip"><strong>0</strong> warnings</span>
+    <span class="chip"><strong>0</strong> not run</span>
+    <span class="chip">total <strong>150.49 ms</strong></span>
+  </div>
+
+  <section>
+    <h2>Test results</h2>
+    <p class="section-sub">
+      All 13 tests sorted by path. Failed tests expand to show the verbatim error
+      message and a one-line root-cause hint.
+    </p>
+
+    <table class="results">
+      <thead>
+        <tr>
+          <th style="width: 110px;">Status</th>
+          <th>Test path</th>
+          <th style="width: 100px;">Duration</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-status="pass">
+          <td><span class="pill pass">Pass</span></td>
+          <td class="path">AutomationShowcase.Currency.CanAffordCost</td>
+          <td class="dur">8.25 ms</td>
+        </tr>
+        <tr class="row-fail" data-status="fail">
+          <td><span class="pill fail">Fail</span></td>
+          <td class="path">AutomationShowcase.Damage.CritDoublesDamage</td>
+          <td class="dur">8.22 ms</td>
+        </tr>
+        <tr class="row-fail-details">
+          <td colspan="3">
+            <details class="fail">
+              <summary>
+                <span>Error message</span>
+                <span class="hint">&mdash; click to expand</span>
+              </summary>
+              <div class="fail-body">
+                <div class="fmsg">Expected 'Critical hit 25 damage vs 100 health should double to 50 health remaining' to be 50.000000, but it was 62.500000 and outside tolerance 0.001000.</div>
+                <div class="fcause"><strong>Root cause:</strong> crit multiplier is <code>1.5f</code> instead of the specified <code>2.0f</code> (seeded bug at <code>ShowcaseDamageSystem.cpp:11</code>).</div>
+              </div>
+            </details>
+          </td>
+        </tr>
+        <tr data-status="pass">
+          <td><span class="pill pass">Pass</span></td>
+          <td class="path">AutomationShowcase.Damage.HealthNeverNegative</td>
+          <td class="dur">8.18 ms</td>
+        </tr>
+        <tr data-status="pass">
+          <td><span class="pill pass">Pass</span></td>
+          <td class="path">AutomationShowcase.Damage.NonCritReducesHealth</td>
+          <td class="dur">7.99 ms</td>
+        </tr>
+        <tr data-status="pass">
+          <td><span class="pill pass">Pass</span></td>
+          <td class="path">AutomationShowcase.EdgeCases.ExactTierBoundaries</td>
+          <td class="dur">8.42 ms</td>
+        </tr>
+        <tr class="row-fail" data-status="fail">
+          <td><span class="pill fail">Fail</span></td>
+          <td class="path">AutomationShowcase.EdgeCases.NegativeDamageIsIgnored</td>
+          <td class="dur">7.86 ms</td>
+        </tr>
+        <tr class="row-fail-details">
+          <td colspan="3">
+            <details class="fail">
+              <summary>
+                <span>Error message</span>
+                <span class="hint">&mdash; click to expand</span>
+              </summary>
+              <div class="fail-body">
+                <div class="fmsg">Expected 'Negative damage should be ignored, leaving 75 health' to be 75.000000, but it was 100.000000 and outside tolerance 0.001000.</div>
+                <div class="fcause"><strong>Root cause:</strong> the test carries a deliberately seeded wrong expectation (75) &mdash; negative damage passes through and the <code>[0, CurrentHealth]</code> clamp caps the result at <code>100</code> with or without a guard, so the assertion can never pass. Shows a test whose assumption contradicts the implementation (test bug at <code>ShowcaseEdgeCaseTests.cpp:53</code>).</div>
+              </div>
+            </details>
+          </td>
+        </tr>
+        <tr data-status="pass">
+          <td><span class="pill pass">Pass</span></td>
+          <td class="path">AutomationShowcase.EdgeCases.ZeroDamageKeepsHealth</td>
+          <td class="dur">7.57 ms</td>
+        </tr>
+        <tr class="row-fail" data-status="fail">
+          <td><span class="pill fail">Fail</span></td>
+          <td class="path">AutomationShowcase.Loot.LootBonusScalesWithLevel</td>
+          <td class="dur">8.16 ms</td>
+        </tr>
+        <tr class="row-fail-details">
+          <td colspan="3">
+            <details class="fail">
+              <summary>
+                <span>Error message</span>
+                <span class="hint">&mdash; click to expand</span>
+              </summary>
+              <div class="fail-body">
+                <div class="fmsg">Expected 'Level 10 should scale 100 base loot by +50% to 150' to be 150.000000, but it was 104.999992 and outside tolerance 0.001000.</div>
+                <div class="fcause"><strong>Root cause:</strong> scaling factor is <code>0.005f</code> instead of the specified <code>0.05f</code> (off-by-a-factor-of-ten typo at <code>ShowcaseDamageSystem.cpp:52</code>).</div>
+              </div>
+            </details>
+          </td>
+        </tr>
+        <tr data-status="pass">
+          <td><span class="pill pass">Pass</span></td>
+          <td class="path">AutomationShowcase.Setup.ActorComponentLifecycle</td>
+          <td class="dur">8.90 ms</td>
+        </tr>
+        <tr data-status="pass">
+          <td><span class="pill pass">Pass</span></td>
+          <td class="path">AutomationShowcase.Setup.ActorFixtureAppliesDamage</td>
+          <td class="dur">8.87 ms</td>
+        </tr>
+        <tr data-status="pass">
+          <td><span class="pill pass">Pass</span></td>
+          <td class="path">AutomationShowcase.Setup.ActorFixtureCleanupVerifiesDestroy</td>
+          <td class="dur">9.40 ms</td>
+        </tr>
+        <tr data-status="pass">
+          <td><span class="pill pass">Pass</span></td>
+          <td class="path">AutomationShowcase.Setup.LatentTickSequence</td>
+          <td class="dur">49.62 ms</td>
+        </tr>
+        <tr data-status="pass">
+          <td><span class="pill pass">Pass</span></td>
+          <td class="path">AutomationShowcase.Setup.WorldAndActorSpawn</td>
+          <td class="dur">9.06 ms</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <strong>About this page.</strong> This is a static rendering of the same data in
+      <code>Docs/AutomationReport/index.json</code>. The raw machine-generated UE
+      report is <code>Docs/AutomationReport/index.html</code> &mdash; best viewed
+      locally from the engine install because it loads ~11 JS/CSS libraries from
+      absolute engine paths (e.g. <code>/bower_components/&hellip;</code>) that 404 on
+      GitHub Pages. The companion narrative page for this project is
+      <a href="../AutomationTests.html">AutomationTests.html</a>.
+    </div>
+  </section>
+
+  <footer>
+    <div>Automation Showcase &middot; Unreal Engine 5.7.4 &middot; module <code>AutomationShowcase</code> &middot; generated 2026-09-09.</div>
+    <div style="margin-top:6px;">
+      Source data: <code>Docs/AutomationReport/index.json</code> &middot; static rendering: <code>Docs/AutomationReport/report.html</code>.
+    </div>
+  </footer>
+
+</main>
+
+</body>
+</html>
