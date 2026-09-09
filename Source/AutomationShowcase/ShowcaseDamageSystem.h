@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Automation Showcase — original showcase code (UE 5.7.4).
 
 #pragma once
 
@@ -23,7 +23,8 @@ class AUTOMATIONSHOWCASE_API UShowcaseDamageSystem : public UObject
 public:
 	/**
 	 * Applies IncomingDamage to CurrentHealth and returns the new health.
-	 * Critical hits double the incoming damage (x2.0).
+	 * Critical hits double the incoming damage (x2.0) (specified behavior —
+	 * implementation currently deviates, see INTENTIONAL-BUG note in the .cpp).
 	 * Result is clamped to [0, CurrentHealth] (overkill protection only;
 	 * negative damage values are NOT guarded - see EdgeCase test).
 	 */
@@ -43,7 +44,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Showcase|Damage")
 	static FString GetDamageTier(float Damage);
 
-	/** Returns BaseLoot scaled by player level: BaseLoot * (1.0 + 0.05 * PlayerLevel). */
+	/** Returns BaseLoot scaled by player level: BaseLoot * (1.0 + 0.05 * PlayerLevel) (specified behavior — implementation currently deviates, see INTENTIONAL-BUG note in the .cpp). */
 	UFUNCTION(BlueprintCallable, Category = "Showcase|Damage")
 	static float CalculateLootBonus(int32 PlayerLevel, float BaseLoot);
 };

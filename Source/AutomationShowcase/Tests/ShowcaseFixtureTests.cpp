@@ -1,14 +1,15 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Automation Showcase — original showcase code (UE 5.7.4).
 
 // Pattern C: shared actor fixture
 //
-// Tests in this file build a full gameplay fixture: a transient world, a
-// spawned AShowcaseTargetDummy, and a UShowcaseDamageSystem instance acting as
-// the shared damage-math fixture. The dummy delegates to the damage system, so
-// these tests exercise the whole chain (world -> actor -> system).
+// Tests in this file build a full gameplay fixture: a transient world and a
+// spawned AShowcaseTargetDummy. The shared "fixture" is the world + dummy
+// setup; the damage math itself is the shared static UShowcaseDamageSystem
+// API, which the dummy delegates to - so these tests exercise the whole chain
+// (world -> actor -> damage system).
 //
-// NOTE (showcase): fixture tests assert current behavior, including the seeded
-// crit bug (1.5x), so they pass - the bug-catching tests in
+// NOTE (showcase): fixture tests assert current, non-crit behavior (they never
+// apply crits), so they pass - the bug-catching tests in
 // ShowcaseDamageSystemTests.cpp are what fail.
 
 #include "Misc/AutomationTest.h"
@@ -60,8 +61,8 @@ IMPLEMENT_SIMPLE_AUTOMATION_TEST(FShowcaseSetupActorFixtureAppliesDamageTest,
 
 bool FShowcaseSetupActorFixtureAppliesDamageTest::RunTest(const FString& Parameters)
 {
-	// ---- SETUP: transient world (with its own world context), target dummy,
-	// shared damage-system instance.
+	// ---- SETUP: transient world (with its own world context) and target
+	// dummy; damage math is the shared static UShowcaseDamageSystem API.
 	UWorld* TestWorld = CreateShowcaseFixtureWorld();
 
 	AShowcaseTargetDummy* TargetDummy = nullptr;
@@ -78,25 +79,18 @@ bool FShowcaseSetupActorFixtureAppliesDamageTest::RunTest(const FString& Paramet
 	}
 	else
 	{
-		if (IsValid(TestWorld))
-		{
-			TestWorld->DestroyWorld(false);
-		}
+		DestroyShowcaseFixtureWorld(TestWorld);
 		return false;
 	}
 
-	UShowcaseDamageSystem* DamageSystem = NewObject<UShowcaseDamageSystem>();
-	TestTrue(TEXT("Setup: shared UShowcaseDamageSystem fixture created"), IsValid(DamageSystem));
-
-	// Sanity-check the fixture actually delegates to the showcase damage system.
-	// NOTE: crits use the CURRENT (buggy) 1.5x multiplier - asserted to match
-	// current behavior; the doubling contract is tested (and fails) elsewhere.
+	// Sanity-check the fixture actually delegates to the showcase damage system
+	// (non-crit path, which is not seeded with a bug).
 	const float ResultHealth = TargetDummy->ApplyDamageToTarget(30.0f, false);
 	TestEqual(TEXT("ApplyDamageToTarget(30, non-crit) on 100 health delegates to the damage system and leaves 70"), ResultHealth, 70.0f, 0.001f);
 	TestEqual(TEXT("Dummy stores the post-damage health"), TargetDummy->Health, 70.0f, 0.001f);
 
-	// ---- TEARDOWN: explicit cleanup of the fixture (world owns dummy; system
-	// is transient and dies with GC).
+	// ---- TEARDOWN: explicit cleanup of the fixture (the transient world owns
+	// the dummy).
 	if (IsValid(TargetDummy))
 	{
 		TargetDummy->Destroy();

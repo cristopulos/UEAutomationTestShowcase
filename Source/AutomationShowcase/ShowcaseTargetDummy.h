@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Automation Showcase — original showcase code (UE 5.7.4).
 
 #pragma once
 
@@ -13,9 +13,10 @@
  *
  * NOTE (showcase): because ApplyDamageToTarget delegates to
  * UShowcaseDamageSystem::ApplyDamage, the seeded crit bug (1.5x) also affects
- * this actor. The fixture tests assert current behavior, including the seeded
- * crit bug, so they pass - the bug-catching tests in
- * ShowcaseDamageSystemTests.cpp are what fail.
+ * this actor. The fixture tests assert current, non-crit behavior (they never
+ * apply crits), so they pass even though the dummy inherits the seeded 1.5x
+ * crit bug - the bug-catching tests in ShowcaseDamageSystemTests.cpp are what
+ * fail.
  */
 UCLASS()
 class AUTOMATIONSHOWCASE_API AShowcaseTargetDummy : public AActor

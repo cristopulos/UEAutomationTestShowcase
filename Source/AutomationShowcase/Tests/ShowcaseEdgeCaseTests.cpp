@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Automation Showcase — original showcase code (UE 5.7.4).
 
 #include "Misc/AutomationTest.h"
 // Project-relative include path: UBT exposes the "Source" root as an include
@@ -6,9 +6,9 @@
 #include "AutomationShowcase/ShowcaseDamageSystem.h"
 
 // Edge-case tests for UShowcaseDamageSystem.
-// NOTE (showcase): one of these tests is EXPECTED to fail - it asserts a
-// negative-damage validation guard that the implementation intentionally
-// lacks. The failing test is the showcase deliverable - do NOT add the guard.
+// NOTE (showcase): one of these tests is EXPECTED to fail because it carries a
+// deliberately seeded wrong expectation (75). The failing test is the showcase
+// deliverable - do NOT change assertion values or "fix" the gameplay code.
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FShowcaseEdgeCasesExactTierBoundariesTest,
 	"AutomationShowcase.EdgeCases.ExactTierBoundaries",
@@ -16,40 +16,39 @@ IMPLEMENT_SIMPLE_AUTOMATION_TEST(FShowcaseEdgeCasesExactTierBoundariesTest,
 
 bool FShowcaseEdgeCasesExactTierBoundariesTest::RunTest(const FString& Parameters)
 {
-	UShowcaseDamageSystem* DamageSystem = NewObject<UShowcaseDamageSystem>();
-
 	// Boundary contract (implemented consistently in GetDamageTier):
 	// "Low"    : Damage < 25.0
 	// "Medium" : 25.0 <= Damage < 75.0
 	// "High"   : Damage >= 75.0
-	TestEqual(TEXT("Zero damage is tier Low"), DamageSystem->GetDamageTier(0.0f), FString(TEXT("Low")));
-	TestEqual(TEXT("Just below 25 is tier Low"), DamageSystem->GetDamageTier(24.999f), FString(TEXT("Low")));
-	TestEqual(TEXT("Exactly 25 is tier Medium"), DamageSystem->GetDamageTier(25.0f), FString(TEXT("Medium")));
-	TestEqual(TEXT("Just below 75 is tier Medium"), DamageSystem->GetDamageTier(74.999f), FString(TEXT("Medium")));
-	TestEqual(TEXT("Exactly 75 is tier High"), DamageSystem->GetDamageTier(75.0f), FString(TEXT("High")));
+	TestEqual(TEXT("Zero damage is tier Low"), UShowcaseDamageSystem::GetDamageTier(0.0f), FString(TEXT("Low")));
+	TestEqual(TEXT("Just below 25 is tier Low"), UShowcaseDamageSystem::GetDamageTier(24.999f), FString(TEXT("Low")));
+	TestEqual(TEXT("Exactly 25 is tier Medium"), UShowcaseDamageSystem::GetDamageTier(25.0f), FString(TEXT("Medium")));
+	TestEqual(TEXT("Just below 75 is tier Medium"), UShowcaseDamageSystem::GetDamageTier(74.999f), FString(TEXT("Medium")));
+	TestEqual(TEXT("Exactly 75 is tier High"), UShowcaseDamageSystem::GetDamageTier(75.0f), FString(TEXT("High")));
 
 	return true;
 }
 
-// EXPECTED-FAILURE (showcase): test assumes a negative-damage guard that the
-// implementation lacks - shows tests catching missing validation. The test
-// itself carries this INTENTIONAL-BUG (showcase): it assumes negative incoming
-// damage is treated as zero before applying, but ApplyDamage does not guard
-// negative values: 100 - (-25) = 125, clamped to CurrentHealth -> 100,
-// which does not match the asserted 75, so the test fails.
+// EXPECTED-FAILURE (showcase): this INTENTIONAL-BUG (showcase) is a deliberately
+// seeded wrong expectation (75) in the test itself - the failure is not the
+// test "catching" a missing guard. Negative damage passes through ApplyDamage
+// and the [0, CurrentHealth] clamp caps the result at CurrentHealth, so the
+// actual result is 100 whether or not a negative-damage guard existed: the
+// clamp masks the missing input validation, and the seeded assumption can
+// never pass.
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FShowcaseEdgeCasesNegativeDamageIsIgnoredTest,
 	"AutomationShowcase.EdgeCases.NegativeDamageIsIgnored",
 	EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 
 bool FShowcaseEdgeCasesNegativeDamageIsIgnoredTest::RunTest(const FString& Parameters)
 {
-	UShowcaseDamageSystem* DamageSystem = NewObject<UShowcaseDamageSystem>();
-
-	// Assumes the system treats negative incoming damage as zero (a guard the
-	// implementation lacks): asserted finalDamage = 0, so health stays 75 after
-	// the 25 damage in this scenario. In reality the negative damage passes
-	// through: 100 - (-25) = 125, then the [0, CurrentHealth] clamp yields 100.
-	const float ResultHealth = DamageSystem->ApplyDamage(100.0f, -25.0f, false);
+	// INTENTIONAL-BUG (showcase): deliberately seeded wrong expectation (75) in
+	// the test. Whatever the negative-damage policy, the [0, CurrentHealth]
+	// clamp caps the result at CurrentHealth: with no guard, 100 - (-25) = 125
+	// -> clamp -> 100; with a negative-as-zero guard, 100 - 0 = 100. The
+	// asserted 75 is unreachable either way - the assumption contradicts the
+	// implementation, and the clamp masks the missing input validation.
+	const float ResultHealth = UShowcaseDamageSystem::ApplyDamage(100.0f, -25.0f, false);
 
 	TestEqual(TEXT("Negative damage should be ignored, leaving 75 health"), ResultHealth, 75.0f, 0.001f);
 
@@ -62,9 +61,7 @@ IMPLEMENT_SIMPLE_AUTOMATION_TEST(FShowcaseEdgeCasesZeroDamageKeepsHealthTest,
 
 bool FShowcaseEdgeCasesZeroDamageKeepsHealthTest::RunTest(const FString& Parameters)
 {
-	UShowcaseDamageSystem* DamageSystem = NewObject<UShowcaseDamageSystem>();
-
-	const float ResultHealth = DamageSystem->ApplyDamage(100.0f, 0.0f, false);
+	const float ResultHealth = UShowcaseDamageSystem::ApplyDamage(100.0f, 0.0f, false);
 
 	TestEqual(TEXT("Zero damage should leave health unchanged at 100"), ResultHealth, 100.0f, 0.001f);
 

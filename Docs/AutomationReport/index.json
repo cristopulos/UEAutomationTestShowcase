@@ -2,8 +2,8 @@
 	"devices": [
 		{
 			"deviceName": "cristopulos-B650-EAGLE",
-			"instance": "B403E7D8A8524E63AF5090208441DDEC",
-			"instanceName": "cristopulos-B650-EAGLE-1087894",
+			"instance": "8D98A47A4B324813B18A74F72D20527D",
+			"instanceName": "cristopulos-B650-EAGLE-1204138",
 			"platform": "LinuxEditor",
 			"oSVersion": "Linux Mint 22.3 6.8.0-139-generic",
 			"model": "Default",
@@ -15,13 +15,13 @@
 			"appInstanceLog": ""
 		}
 	],
-	"reportCreatedOn": "2026.09.09-09.08.13",
+	"reportCreatedOn": "2026.09.09-11.22.17",
 	"succeeded": 10,
 	"succeededWithWarnings": 0,
 	"failed": 3,
 	"notRun": 0,
 	"inProcess": 0,
-	"totalDuration": 0.1527046412229538,
+	"totalDuration": 0.15049301087856293,
 	"comparisonExported": false,
 	"comparisonExportDirectory": "",
 	"tests": [
@@ -31,10 +31,10 @@
 			"tags": [],
 			"state": "Success",
 			"deviceInstance": [
-				"B403E7D8A8524E63AF5090208441DDEC"
+				"8D98A47A4B324813B18A74F72D20527D"
 			],
-			"duration": 0.0081449896097183228,
-			"dateTime": "2026.09.09-09.08.13",
+			"duration": 0.0082484940066933632,
+			"dateTime": "2026.09.09-11.22.16",
 			"entries": [],
 			"warnings": 0,
 			"errors": 0,
@@ -46,10 +46,10 @@
 			"tags": [],
 			"state": "Fail",
 			"deviceInstance": [
-				"B403E7D8A8524E63AF5090208441DDEC"
+				"8D98A47A4B324813B18A74F72D20527D"
 			],
-			"duration": 0.0083558466285467148,
-			"dateTime": "2026.09.09-09.08.13",
+			"duration": 0.0082155512645840645,
+			"dateTime": "2026.09.09-11.22.16",
 			"entries": [
 				{
 					"event":
@@ -60,8 +60,8 @@
 						"artifact": "00000000000000000000000000000000"
 					},
 					"filename": "/home/cristopulos/VibeCoding Test/Automation Showcase/Source/AutomationShowcase/Tests/ShowcaseDamageSystemTests.cpp",
-					"lineNumber": 27,
-					"timestamp": "2026.09.09-09.08.13"
+					"lineNumber": 25,
+					"timestamp": "2026.09.09-11.22.16"
 				}
 			],
 			"warnings": 0,
@@ -74,10 +74,10 @@
 			"tags": [],
 			"state": "Success",
 			"deviceInstance": [
-				"B403E7D8A8524E63AF5090208441DDEC"
+				"8D98A47A4B324813B18A74F72D20527D"
 			],
-			"duration": 0.0082255816087126732,
-			"dateTime": "2026.09.09-09.08.13",
+			"duration": 0.0081810746341943741,
+			"dateTime": "2026.09.09-11.22.16",
 			"entries": [],
 			"warnings": 0,
 			"errors": 0,
@@ -89,10 +89,10 @@
 			"tags": [],
 			"state": "Success",
 			"deviceInstance": [
-				"B403E7D8A8524E63AF5090208441DDEC"
+				"8D98A47A4B324813B18A74F72D20527D"
 			],
-			"duration": 0.0080275889486074448,
-			"dateTime": "2026.09.09-09.08.13",
+			"duration": 0.0079918866977095604,
+			"dateTime": "2026.09.09-11.22.16",
 			"entries": [],
 			"warnings": 0,
 			"errors": 0,
@@ -104,10 +104,10 @@
 			"tags": [],
 			"state": "Success",
 			"deviceInstance": [
-				"B403E7D8A8524E63AF5090208441DDEC"
+				"8D98A47A4B324813B18A74F72D20527D"
 			],
-			"duration": 0.0083419913426041603,
-			"dateTime": "2026.09.09-09.08.13",
+			"duration": 0.0084170233458280563,
+			"dateTime": "2026.09.09-11.22.16",
 			"entries": [],
 			"warnings": 0,
 			"errors": 0,
@@ -119,10 +119,10 @@
 			"tags": [],
 			"state": "Fail",
 			"deviceInstance": [
-				"B403E7D8A8524E63AF5090208441DDEC"
+				"8D98A47A4B324813B18A74F72D20527D"
 			],
-			"duration": 0.0083927260711789131,
-			"dateTime": "2026.09.09-09.08.13",
+			"duration": 0.0078556584194302559,
+			"dateTime": "2026.09.09-11.22.16",
 			"entries": [
 				{
 					"event":
@@ -133,8 +133,8 @@
 						"artifact": "00000000000000000000000000000000"
 					},
 					"filename": "/home/cristopulos/VibeCoding Test/Automation Showcase/Source/AutomationShowcase/Tests/ShowcaseEdgeCaseTests.cpp",
-					"lineNumber": 56,
-					"timestamp": "2026.09.09-09.08.13"
+					"lineNumber": 55,
+					"timestamp": "2026.09.09-11.22.16"
 				}
 			],
 			"warnings": 0,
@@ -147,10 +147,10 @@
 			"tags": [],
 			"state": "Success",
 			"deviceInstance": [
-				"B403E7D8A8524E63AF5090208441DDEC"
+				"8D98A47A4B324813B18A74F72D20527D"
 			],
-			"duration": 0.008372478187084198,
-			"dateTime": "2026.09.09-09.08.13",
+			"duration": 0.0075744641944766045,
+			"dateTime": "2026.09.09-11.22.16",
 			"entries": [],
 			"warnings": 0,
 			"errors": 0,
@@ -162,10 +162,10 @@
 			"tags": [],
 			"state": "Fail",
 			"deviceInstance": [
-				"B403E7D8A8524E63AF5090208441DDEC"
+				"8D98A47A4B324813B18A74F72D20527D"
 			],
-			"duration": 0.0081944633275270462,
-			"dateTime": "2026.09.09-09.08.13",
+			"duration": 0.008155137300491333,
+			"dateTime": "2026.09.09-11.22.16",
 			"entries": [
 				{
 					"event":
@@ -176,8 +176,8 @@
 						"artifact": "00000000000000000000000000000000"
 					},
 					"filename": "/home/cristopulos/VibeCoding Test/Automation Showcase/Source/AutomationShowcase/Tests/ShowcaseDamageSystemTests.cpp",
-					"lineNumber": 89,
-					"timestamp": "2026.09.09-09.08.13"
+					"lineNumber": 79,
+					"timestamp": "2026.09.09-11.22.16"
 				}
 			],
 			"warnings": 0,
@@ -190,10 +190,10 @@
 			"tags": [],
 			"state": "Success",
 			"deviceInstance": [
-				"B403E7D8A8524E63AF5090208441DDEC"
+				"8D98A47A4B324813B18A74F72D20527D"
 			],
-			"duration": 0.0092230970039963722,
-			"dateTime": "2026.09.09-09.08.13",
+			"duration": 0.0089029045775532722,
+			"dateTime": "2026.09.09-11.22.16",
 			"entries": [],
 			"warnings": 0,
 			"errors": 0,
@@ -205,10 +205,10 @@
 			"tags": [],
 			"state": "Success",
 			"deviceInstance": [
-				"B403E7D8A8524E63AF5090208441DDEC"
+				"8D98A47A4B324813B18A74F72D20527D"
 			],
-			"duration": 0.0089888665825128555,
-			"dateTime": "2026.09.09-09.08.13",
+			"duration": 0.008867328055202961,
+			"dateTime": "2026.09.09-11.22.16",
 			"entries": [],
 			"warnings": 0,
 			"errors": 0,
@@ -220,10 +220,10 @@
 			"tags": [],
 			"state": "Success",
 			"deviceInstance": [
-				"B403E7D8A8524E63AF5090208441DDEC"
+				"8D98A47A4B324813B18A74F72D20527D"
 			],
-			"duration": 0.0093134557828307152,
-			"dateTime": "2026.09.09-09.08.13",
+			"duration": 0.0093953004106879234,
+			"dateTime": "2026.09.09-11.22.17",
 			"entries": [],
 			"warnings": 0,
 			"errors": 0,
@@ -235,10 +235,10 @@
 			"tags": [],
 			"state": "Success",
 			"deviceInstance": [
-				"B403E7D8A8524E63AF5090208441DDEC"
+				"8D98A47A4B324813B18A74F72D20527D"
 			],
-			"duration": 0.050105713307857513,
-			"dateTime": "2026.09.09-09.08.13",
+			"duration": 0.049624253064393997,
+			"dateTime": "2026.09.09-11.22.17",
 			"entries": [],
 			"warnings": 0,
 			"errors": 0,
@@ -250,10 +250,10 @@
 			"tags": [],
 			"state": "Success",
 			"deviceInstance": [
-				"B403E7D8A8524E63AF5090208441DDEC"
+				"8D98A47A4B324813B18A74F72D20527D"
 			],
-			"duration": 0.0090178409591317177,
-			"dateTime": "2026.09.09-09.08.13",
+			"duration": 0.0090639311820268631,
+			"dateTime": "2026.09.09-11.22.17",
 			"entries": [],
 			"warnings": 0,
 			"errors": 0,

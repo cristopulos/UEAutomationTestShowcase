@@ -524,9 +524,8 @@ bool FShowcaseEdgeCasesExactTierBoundariesTest::RunTest(const FString&amp; Param
       <li><strong><code>EditorContext</code></strong> &mdash; the test runs in the editor
         (and in <code>UnrealEditor-Cmd</code> headless mode), which is what we want for
         unit-style tests of editor-time gameplay math.</li>
-      <li><strong><code>EngineFilter</code></strong> &mdash; membership in the <em>Engine</em>
-        smoke-filter group; this is what keeps project tests out of unrelated engine
-        smoke-test sweeps.</li>
+      <li><strong><code>EngineFilter</code></strong> &mdash; classifies the test into the
+        Engine test group (counterpart: <code>ProductFilter</code> for game-specific tests).</li>
       <li><strong><code>RunTest</code></strong> &mdash; the body. Call <code>TestEqual</code>,
         <code>TestTrue</code>, <code>TestFalse</code> with descriptive <em>What</em> strings;
         those strings are what shows up in the failure report.</li>
@@ -704,8 +703,9 @@ float AShowcaseTargetDummy::ApplyDamageToTarget(float Damage, bool bIsCritical)
 
     <h3>a. In-editor GUI</h3>
     <ul>
-      <li><strong>Window &rarr; Test Automation</strong> (or
-        <strong>Tools &rarr; Session Frontend &rarr; Automation</strong> tab).</li>
+      <li><strong>Tools &rarr; Test Automation</strong> (requires the Functional Testing
+        Editor plugin) &mdash; or <strong>Tools &rarr; Session Frontend &rarr; Automation</strong>
+        tab.</li>
       <li>Type <code>AutomationShowcase</code> into the filter.</li>
       <li>Tick the individual tests, or tick the top-level <em>AutomationShowcase</em>
         node to select everything.</li>
@@ -716,21 +716,26 @@ float AShowcaseTargetDummy::ApplyDamageToTarget(float Damage, bool bIsCritical)
     <h3>b. Command line (headless)</h3>
     <p>
       <code>-nullrhi</code> skips rendering entirely, <code>-unattended</code> skips any
-      modal prompts, and <code>-ReportOutputPath</code> / <code>-ReportType=HTML</code>
-      produce an <code>index.html</code> + <code>index.json</code> report alongside the
-      log. The exit code is non-zero when tests fail, which is what makes it usable as
-      a CI gate.
+      modal prompts, and <code>-ReportExportPath</code> also produces an
+      <code>index.html</code> + <code>index.json</code> report alongside the log. The
+      exit code is non-zero when tests fail, which is what makes it usable as a CI
+      gate.
+    </p>
+    <p style="margin-top: -6px;">
+      Adjust the engine binary path to your engine install (this machine mounts UE
+      5.7.4 at <code>/mnt/data/UE 5.7.4</code>).
     </p>
 <pre class="cmd"><code>"/mnt/data/UE 5.7.4/Engine/Binaries/Linux/UnrealEditor-Cmd" \
   "/home/cristopulos/VibeCoding Test/Automation Showcase/AutomationShowcase.uproject" \
   -ExecCmds="Automation RunTests AutomationShowcase; quit" \
   -unattended -nopause -nosplash -nullrhi -log \
-  -ReportOutputPath=/tmp/autoshowcase-report -ReportType=HTML</code></pre>
+  -ReportExportPath=/tmp/autoshowcase-report</code></pre>
 
     <div class="note">
-      The filter string <code>AutomationRunTests AutomationShowcase</code> matches every
-      test whose pretty-name starts with <code>AutomationShowcase.</code> &mdash; exactly
-      the 13 tests in this suite.
+      The filter <code>AutomationShowcase</code> matches every test whose pretty-name
+      contains it &mdash; exactly the 13 tests in this suite (plain filter arguments are
+      substring/contains matches; use <code>StartsWith:</code> as a prefix for an exact
+      prefix match).
     </div>
 
     <h3>c. List tests without running them</h3>

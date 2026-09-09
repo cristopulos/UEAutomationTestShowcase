@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Automation Showcase — original showcase code (UE 5.7.4).
 
 #include "ShowcaseDamageSystem.h"
 

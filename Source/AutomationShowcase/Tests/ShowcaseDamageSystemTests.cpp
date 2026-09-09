@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Automation Showcase — original showcase code (UE 5.7.4).
 
 #include "Misc/AutomationTest.h"
 // Project-relative include path: UBT exposes the "Source" root as an include
@@ -18,9 +18,7 @@ IMPLEMENT_SIMPLE_AUTOMATION_TEST(FShowcaseDamageCritDoublesDamageTest,
 
 bool FShowcaseDamageCritDoublesDamageTest::RunTest(const FString& Parameters)
 {
-	UShowcaseDamageSystem* DamageSystem = NewObject<UShowcaseDamageSystem>();
-
-	const float ResultHealth = DamageSystem->ApplyDamage(100.0f, 25.0f, true);
+	const float ResultHealth = UShowcaseDamageSystem::ApplyDamage(100.0f, 25.0f, true);
 
 	TestEqual(TEXT("Critical hit 25 damage vs 100 health should double to 50 health remaining"), ResultHealth, 50.0f, 0.001f);
 
@@ -33,9 +31,7 @@ IMPLEMENT_SIMPLE_AUTOMATION_TEST(FShowcaseDamageNonCritReducesHealthTest,
 
 bool FShowcaseDamageNonCritReducesHealthTest::RunTest(const FString& Parameters)
 {
-	UShowcaseDamageSystem* DamageSystem = NewObject<UShowcaseDamageSystem>();
-
-	const float ResultHealth = DamageSystem->ApplyDamage(100.0f, 25.0f, false);
+	const float ResultHealth = UShowcaseDamageSystem::ApplyDamage(100.0f, 25.0f, false);
 
 	TestEqual(TEXT("Non-crit 25 damage vs 100 health should leave 75 health"), ResultHealth, 75.0f, 0.001f);
 
@@ -48,9 +44,7 @@ IMPLEMENT_SIMPLE_AUTOMATION_TEST(FShowcaseDamageHealthNeverNegativeTest,
 
 bool FShowcaseDamageHealthNeverNegativeTest::RunTest(const FString& Parameters)
 {
-	UShowcaseDamageSystem* DamageSystem = NewObject<UShowcaseDamageSystem>();
-
-	const float ResultHealth = DamageSystem->ApplyDamage(10.0f, 500.0f, false);
+	const float ResultHealth = UShowcaseDamageSystem::ApplyDamage(10.0f, 500.0f, false);
 
 	TestEqual(TEXT("Massive overkill damage should clamp health to exactly zero, never negative"), ResultHealth, 0.0f, 0.001f);
 
@@ -63,11 +57,9 @@ IMPLEMENT_SIMPLE_AUTOMATION_TEST(FShowcaseCurrencyCanAffordCostTest,
 
 bool FShowcaseCurrencyCanAffordCostTest::RunTest(const FString& Parameters)
 {
-	UShowcaseDamageSystem* DamageSystem = NewObject<UShowcaseDamageSystem>();
-
-	TestTrue(TEXT("100 currency can afford a 50 cost"), DamageSystem->CanAffordCost(100, 50));
-	TestTrue(TEXT("Exactly 50 currency can afford a 50 cost (inclusive boundary)"), DamageSystem->CanAffordCost(50, 50));
-	TestFalse(TEXT("49 currency cannot afford a 50 cost"), DamageSystem->CanAffordCost(49, 50));
+	TestTrue(TEXT("100 currency can afford a 50 cost"), UShowcaseDamageSystem::CanAffordCost(100, 50));
+	TestTrue(TEXT("Exactly 50 currency can afford a 50 cost (inclusive boundary)"), UShowcaseDamageSystem::CanAffordCost(50, 50));
+	TestFalse(TEXT("49 currency cannot afford a 50 cost"), UShowcaseDamageSystem::CanAffordCost(49, 50));
 
 	return true;
 }
@@ -80,9 +72,7 @@ IMPLEMENT_SIMPLE_AUTOMATION_TEST(FShowcaseLootBonusScalesWithLevelTest,
 
 bool FShowcaseLootBonusScalesWithLevelTest::RunTest(const FString& Parameters)
 {
-	UShowcaseDamageSystem* DamageSystem = NewObject<UShowcaseDamageSystem>();
-
-	const float LootBonus = DamageSystem->CalculateLootBonus(10, 100.0f);
+	const float LootBonus = UShowcaseDamageSystem::CalculateLootBonus(10, 100.0f);
 
 	TestEqual(TEXT("Level 10 should scale 100 base loot by +50% to 150"), LootBonus, 150.0f, 0.001f);
 

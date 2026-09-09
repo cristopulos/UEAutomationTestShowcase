@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Automation Showcase — original showcase code (UE 5.7.4).
 
 // Pattern A: per-test world setup/teardown
 // Pattern B: latent asynchronous setup
@@ -167,7 +167,7 @@ bool FShowcaseSetupActorComponentLifecycleTest::RunTest(const FString& Parameter
 // Shared counter for the Pattern B pump/verify pair. A latent test runs on the
 // game thread, so no locking is required; file-static keeps it private while
 // letting both command classes read it.
-static int32 FShowcasePumpCounterValue = 0;
+static int32 ShowcasePumpCounterValue = 0;
 
 // Pattern B setup command: completes after N Update() calls, incrementing the
 // shared counter once per call.
@@ -175,8 +175,8 @@ DEFINE_LATENT_AUTOMATION_COMMAND_ONE_PARAMETER(FShowcasePumpTicksCommand, int32,
 
 bool FShowcasePumpTicksCommand::Update()
 {
-	++FShowcasePumpCounterValue;
-	return FShowcasePumpCounterValue >= TicksToPump;
+	++ShowcasePumpCounterValue;
+	return ShowcasePumpCounterValue >= TicksToPump;
 }
 
 // Pattern B assertion command: runs after the setup command completed and
@@ -189,7 +189,7 @@ bool FShowcaseVerifyTicksCommand::Update()
 	if (FAutomationTestBase* CurrentTest = FAutomationTestFramework::Get().GetCurrentTest())
 	{
 		CurrentTest->TestEqual(TEXT("Latent setup ran the pump command once per frame for the expected number of updates"),
-			static_cast<float>(FShowcasePumpCounterValue), static_cast<float>(ExpectedTicks), 0.001f);
+			static_cast<float>(ShowcasePumpCounterValue), static_cast<float>(ExpectedTicks), 0.001f);
 	}
 	return true; // assertions done - complete immediately
 }
@@ -201,7 +201,7 @@ IMPLEMENT_SIMPLE_AUTOMATION_TEST(FShowcaseSetupLatentTickSequenceTest,
 bool FShowcaseSetupLatentTickSequenceTest::RunTest(const FString& Parameters)
 {
 	// Reset the shared counter so repeated runs stay deterministic.
-	FShowcasePumpCounterValue = 0;
+	ShowcasePumpCounterValue = 0;
 
 	// ---- SETUP (deferred): enqueue the setup command; it performs one unit of
 	// "setup work" per Update() call and completes after 5 calls.
