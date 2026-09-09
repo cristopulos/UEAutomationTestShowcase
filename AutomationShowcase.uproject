@@ -1,0 +1,26 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "5.7.4",
+	"Category": "",
+	"Description": "UE 5.7 project duplicated from the VibeUE MCP template",
+	"Modules": [
+		{
+			"Name": "AutomationShowcase",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "ModelingToolsEditorMode",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
+		},
+		{
+			"Name": "VibeUE",
+			"Enabled": true
+		}
+	]
+}
